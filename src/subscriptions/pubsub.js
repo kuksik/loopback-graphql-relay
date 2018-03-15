@@ -83,7 +83,7 @@ class PubSub {
   }
 
   unsubscribe(subId) {
-    this.subscriptions[subId][0].destroy();
+    // this.subscriptions[subId][0].destroy();
     delete this.subscriptions[subId];
   }
 
