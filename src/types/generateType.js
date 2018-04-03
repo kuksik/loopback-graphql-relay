@@ -102,8 +102,8 @@ function generateFieldArgs(field) {
 }
 
 function generateTypeFields(def) {
-  getType = require('./type').getType;
-  getConnection = require('./type').getConnection;
+  getType = require('./type').getType; // eslint-disable-line
+  getConnection = require('./type').getConnection; // eslint-disable-line
 
   const fields = {};
 
