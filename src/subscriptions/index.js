@@ -58,7 +58,7 @@ module.exports = function(app, schema, opts) {
       response.end();
     });
   } else {
-    websocketServer = http.createServer((request, response) => {
+    websocketServer = createServer((request, response) => {
       response.writeHead(404);
       response.end();
     });
