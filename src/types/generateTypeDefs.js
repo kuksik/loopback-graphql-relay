@@ -1,5 +1,4 @@
 
-
 const _ = require('lodash');
 
 const {
@@ -75,7 +74,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
   let propertyType = property.type;
 
   // Add resolver
-  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
+  currentProperty.resolve = obj => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
 
   // If it's an Array type, map it to JSON Scalar
   if (propertyType.name === 'Array') { // JSON Array
@@ -104,7 +103,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
     } else {
       currentProperty.meta.type = property.type[0].name;
     }
-    propertyType = property.type[0];
+    propertyType = property.type[0];// eslint-disable-line
   }
 
   // See if this property is a scalar.
@@ -228,6 +227,10 @@ function mapRelation(rel, modelName, relName) {
   };
 }
 
+function sharedRelations(model) {
+  return _.pickBy(model.relations, rel => rel.modelTo && rel.modelTo.shared);
+}
+
 /**
  * Generates a definition for a single model type
  * @param {*} model
@@ -271,10 +274,6 @@ function mapInputType(model) {
   _.forEach(model.definition.properties, (property, key) => {
     mapProperty(model, property, modelName, key, true);
   });
-}
-
-function sharedRelations(model) {
-  return _.pickBy(model.relations, rel => rel.modelTo && rel.modelTo.shared);
 }
 
 function getTypeDef(name) {
