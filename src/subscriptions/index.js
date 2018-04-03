@@ -1,6 +1,8 @@
 'use strict';
 
 const {createServer} = require('http');
+const https = require('https');
+const fs = require('fs');
 const {SubscriptionServer} = require('subscriptions-transport-ws');
 const {execute, subscribe} = require('graphql');
 const bodyParser = require('body-parser');
@@ -45,13 +47,25 @@ module.exports = function(app, schema, opts) {
   const options = subscriptionOpts.options || {};
   const socketOptions = subscriptionOpts.socketOptions || {};
 
-  const websocketServer = createServer((request, response) => {
-    response.writeHead(404);
-    response.end();
-  });
+  let websocketServer = '';
+  if(subscriptionOpts.ssl) {
+    const ssl = {
+      key: fs.readFileSync(subscriptionOpts.keyPath),
+      cert: fs.readFileSync(subscriptionOpts.certPath)
+    };
+    websocketServer = https.createServer(ssl, (request, response) => {
+      response.writeHead(404);
+      response.end();
+    });
+  } else {
+    websocketServer = http.createServer((request, response) => {
+      response.writeHead(404);
+      response.end();
+    });
+  }
 
   websocketServer.listen(WS_PORT, () => console.log(
-    `Websocket Server is now running on http://localhost:${WS_PORT}`
+    `Websocket Server is now running on http(s)://localhost:${WS_PORT}`
   ));
 
   SubscriptionServer.create({schema, execute, subscribe}, {server: websocketServer, path: '/'});
