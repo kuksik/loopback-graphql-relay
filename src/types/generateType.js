@@ -16,7 +16,7 @@ const {
 } = require('graphql-relay');
 
 // const type = require('./type');
-const { getType, getConnection } = require('./type');
+let { getType, getConnection } = require('./type');
 const { generateTypeDefs } = require('./generateTypeDefs');
 
 /**
@@ -102,6 +102,9 @@ function generateFieldArgs(field) {
 }
 
 function generateTypeFields(def) {
+  getType = require('./type').getType;
+  getConnection = require('./type').getConnection;
+
   const fields = {};
 
   _.forEach(def.meta.fields, (field, fieldName) => {
