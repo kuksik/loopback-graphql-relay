@@ -65,7 +65,27 @@ module.exports = function (app, schema, opts) {
 
   websocketServer.listen(WS_PORT, () => console.log(`Websocket Server is now running on http(s)://localhost:${WS_PORT}`));
 
-  SubscriptionServer.create({ schema, execute, subscribe }, { server: websocketServer, path: '/' });
+  const validateToken = authToken => new Promise((resolve, reject) => {
+    let accessToken = '';
+    if (subscriptionOpts.AccessTokenModel) { accessToken = app.models[subscriptionOpts.AccessTokenModel]; } else { accessToken = app.models.AccessToken; }
+
+    accessToken.resolve(authToken, (err, token) => {
+      if (token) {
+        resolve();
+      } else reject();
+    });
+  });
+
+  function wsConnect(connectionParams) {
+    if (subscriptionOpts.auth && connectionParams.authToken) {
+      return validateToken(connectionParams.authToken).then(() => true).catch(() => false);
+    } else if (!subscriptionOpts.auth) return true;
+    return false;
+  }
+
+  SubscriptionServer.create({
+    schema, execute, subscribe, onConnect: wsConnect,
+  }, { server: websocketServer, path: '/' });
 
   return server;
 };
