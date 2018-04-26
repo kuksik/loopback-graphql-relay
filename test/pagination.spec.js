@@ -27,8 +27,8 @@ describe('Pagination', () => {
         Account {
           AccountLogin(input:{
             credentials: {
-              username: "amnaj", 
-              password: "123"
+              username: "mithoog", 
+              password: "abc"
             }
           }) {
             obj
@@ -76,7 +76,7 @@ describe('Pagination', () => {
         expect(res).to.have.status(200);
         res = res.body.data;
         expect(res.viewer.sites.edges.length).to.equal(2);
-        expect(res.viewer.sites.totalCount).to.equal(3);
+        expect(res.viewer.sites.totalCount).to.equal(2);
       });
   });
 
@@ -110,9 +110,9 @@ describe('Pagination', () => {
       .then((res) => {
         expect(res).to.have.status(200);
         res = res.body.data;
-        expect(res.viewer.sites.totalCount).to.equal(3);
+        expect(res.viewer.sites.totalCount).to.equal(2);
         expect(res.viewer.sites.edges.length).to.be.above(0);
-        expect(fromGlobalId(res.viewer.sites.edges[0].node.id).id).to.equal('3');
+        expect(fromGlobalId(res.viewer.sites.edges[0].node.id).id).to.equal('6');
         expect(res.viewer.sites.pageInfo.hasNextPage).to.be.true;
       });
   });
@@ -154,9 +154,9 @@ describe('Pagination', () => {
       .then((res) => {
         expect(res).to.have.status(200);
         res = res.body.data;
-        expect(res.viewer.sites.edges[0].node.name).to.equal('sample site');
-        expect(res.viewer.sites.edges[0].node.books.edges.length).to.be.above(0);
-        expect(res.viewer.sites.edges[0].node.books.totalCount).to.be.above(0);
+        expect(res.viewer.sites.edges[0].node.name).to.equal('BlueEastHq');
+        expect(res.viewer.sites.edges[0].node.books.edges.length).to.be.equal(0);
+        expect(res.viewer.sites.edges[0].node.books.totalCount).to.be.equal(0);
         expect(res.viewer.sites.edges[0].cursor).not.to.be.empty;
       });
   });

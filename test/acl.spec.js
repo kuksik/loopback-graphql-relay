@@ -21,8 +21,8 @@ describe('Queries', () => {
         Account {
           AccountLogin(input:{
             credentials: {
-              username: "amnam", 
-              password: "123"
+              username: "mithoog", 
+              password: "abc"
             }
           }) {
             obj
@@ -65,7 +65,7 @@ describe('Queries', () => {
         expect(res).to.have.status(200);
         const result = res.body.data;
         expect(result.viewer.sites.edges.length).to.equal(2);
-        expect(result.viewer.sites.edges[0].node.owner.username).to.equal('amnam');
+        expect(result.viewer.sites.edges[0].node.owner.username).to.equal('mithoog');
       });
     });
 

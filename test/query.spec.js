@@ -171,7 +171,7 @@ describe('Queries', () => {
         })
         .then((res) => {
           expect(res).to.have.status(200);
-          expect(res.body.data.Reader.exists).to.equal(true);
+          expect(res.body.data.Author.exists).to.equal(true);
         });
     });
 
@@ -181,8 +181,8 @@ describe('Queries', () => {
           Author {
             AuthorFindOne(filter: { where: {id: 3}}) {
               id
-              first_name
-              last_name
+              firstName
+              lastName
             }
           }
         }`;
@@ -204,8 +204,8 @@ describe('Queries', () => {
           Author {
             AuthorFindById(id: 3) {
               id
-              first_name
-              last_name
+              firstName
+              lastName
             }
           }
         }`;

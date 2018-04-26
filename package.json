@@ -12,7 +12,7 @@
     "lint": "npm run eslint",
     "data": "cpx ./data.json ./data/",
     "pretest": "npm run eslint && npm run data",
-    "test": "mocha --reporter spec --timeout 10000",
+    "test": "mocha --reporter spec --timeout 10000 --exit",
     "start": "node server/server.js",
     "nodemon": "nodemon server/server.js",
     "debug": "nodemon server/server.js --debug-brk=5858",
