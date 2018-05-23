@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/BlueEastCode/loopback-graphql-relay#readme",
   "dependencies": {
-    "apollo-engine": "^1.1.1",
+    "apollo-engine": "0.5.4",
     "async": "^2.4.0",
     "body-parser": "^1.15.2",
     "event-stream": "^3.3.4",
