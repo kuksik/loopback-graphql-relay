@@ -10,7 +10,7 @@ const startSubscriptionServer = require('./subscriptions');
 const patchChangeStream = require('./subscriptions/patchChangeStream');
 
 module.exports = function(app, options) {
-  console.log('Option Param', options);
+  // console.log('Option Param', options);
   const models = app.models();
   
   _.forEach(models, (model) =>  {
@@ -20,15 +20,16 @@ module.exports = function(app, options) {
   const schema = getSchema(models, options);
   // const apollo = options.apollo;
   const apollo = {
-    apiKey: 'GPjWuVoaPBzEDA9RvGzP9A',
-    debugLevel: 'DEBUG'
+    apiKey: 'service:BlueEastCode-4822:GPjWuVoaPBzEDA9RvGzP9A',
+    debugLevel: 'ERROR',
+    graphqlPort: 8000,
+    dumpTraffic: false
   }
   const graphiqlPath = options.graphiqlPath || '/graphiql';
   const path = options.path || '/graphql';
 
     if (apollo) {
       if (!apollo.apiKey) {
-        // apollo.apiKey = 'GPjWuVoaPBzEDA9RvGzP9A';
         throw new Error('Apollo engine api key is not defined');
       }
       const engine = new Engine({
@@ -41,10 +42,10 @@ module.exports = function(app, options) {
             // or ERROR
           },
         },
-        graphqlPort: apollo.graphqlPort || 2000, // GraphQL port
+        graphqlPort: apollo.graphqlPort || 8000, // GraphQL port
         endpoint: path || '/graphql', // GraphQL endpoint suffix -
         // '/graphql' by default
-        dumpTraffic: true, // Debug configuration that logs traffic between
+        dumpTraffic: apollo.dumpTraffic || false, // Debug configuration that logs traffic between
         // Proxy and GraphQL server
       });
   
@@ -59,7 +60,7 @@ module.exports = function(app, options) {
       app,
       req
     },
-    tracing: false,
+    tracing: true,
     cacheControl: true
   })));
 
