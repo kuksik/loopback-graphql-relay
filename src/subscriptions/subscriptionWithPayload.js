@@ -77,25 +77,11 @@ module.exports = function
         }));
     },
     subscribe: withFilter(
-      () => loopbackPubSub.asyncIterator(modelName),
       (payload, variables, context, info) => {
-        const subscriptionPayload = {
-          clientSubscriptionId: variables.input.clientSubscriptionId,
-          remove: variables.input.remove,
-          create: variables.input.create,
-          update: variables.input.update,
-          opts: variables.input.options,
-        };
-
-        subscriptionPayload.model = model;
-
-        try {
-          loopbackPubSub.subscribe(info.fieldName, null, subscriptionPayload);
-        } catch (ex) {
-          console.log(ex);
-        }
-        return true;
+        return loopbackPubSub.asyncIterator(model, variables.input);
       },
-    ),
+      (payload, variables, context, info) => {
+        return true;
+      }),
   };
 };
