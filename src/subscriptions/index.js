@@ -17,7 +17,7 @@ module.exports = function (app, schema, opts) {
   server.use('/graphql', bodyParser.json(), graphqlExpress({
     schema
   }));
-  if(!opts.subscriptionServer.graphiqlHost) const opts.subscriptionServer.graphiqlHost = "localhost";
+  if (!opts.subscriptionServer.graphiqlHost) opts.subscriptionServer.graphiqlHost = 'localhost';
   server.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
     subscriptionsEndpoint: `ws://${opts.subscriptionServer.graphiqlHost}:${PORT}/subscriptions`
