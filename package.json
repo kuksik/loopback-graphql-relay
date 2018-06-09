@@ -1,7 +1,7 @@
 {
   "name": "loopback-graphql-relay",
   "description": "Add Relay based Apollo Server or GraphQL queries on your Loopback server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/boot.js",
   "directories": {
     "test": "test"
@@ -35,7 +35,7 @@
     "REST",
     "APIs"
   ],
-  "author": "Abdul Rehman Talat <rehman.talat@gmail.com>",
+  "author": "Abdul Rehman Talat <rehman.talat@gmail.com>, Abdul Ghaffar <gmithoog@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BlueEastCode/loopback-graphql-relay/issues"
@@ -53,7 +53,7 @@
     "express-graphql": "^0.6.11",
     "graphql": "^0.13.0",
     "graphql-date": "1.0.3",
-    "graphql-loopback-subscriptions": "^0.1.0",
+    "graphql-loopback-subscriptions": "^git+https://github.com/BlueEastCode/graphql-loopback-subscriptions.git#fix/subscription",
     "graphql-relay": "git+https://github.com/BlueEastCode/graphql-relay-js.git",
     "graphql-subscriptions": "^0.5.6",
     "graphql-type-json": "0.1.4",
