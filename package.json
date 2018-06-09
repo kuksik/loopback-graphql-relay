@@ -53,7 +53,7 @@
     "express-graphql": "^0.6.11",
     "graphql": "^0.13.0",
     "graphql-date": "1.0.3",
-    "graphql-loopback-subscriptions": "^git+https://github.com/BlueEastCode/graphql-loopback-subscriptions.git#fix/subscription",
+    "graphql-loopback-subscriptions": "git+https://github.com/BlueEastCode/graphql-loopback-subscriptions.git#fix/subscription",
     "graphql-relay": "git+https://github.com/BlueEastCode/graphql-relay-js.git",
     "graphql-subscriptions": "^0.5.6",
     "graphql-type-json": "0.1.4",
