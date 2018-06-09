@@ -20,7 +20,7 @@ module.exports = function (app, schema, opts) {
 
   server.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
-    subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`
+    subscriptionsEndpoint: `ws://${opts.subscriptionServer.graphiqlHost}:${PORT}/subscriptions`
   }));
 
 // Wrap the Express server
