@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const {
-  connectionArgs
+  connectionArgs,
 } = require('graphql-relay');
 
 const GeoPointTypeDefs = require('./GeoPoint');
@@ -19,7 +19,7 @@ const { connectionFromPromisedArray } = require('../db/resolveConnection');
         Number = float
         Object = JSON (custom scalar)
         String - string
-    ***/
+    ** */
 
 let types = {};
 
@@ -34,7 +34,7 @@ const SCALARS = {
   now: 'Date',
   guid: 'ID',
   uuid: 'ID',
-  uuidv4: 'ID'
+  uuidv4: 'ID',
 };
 
 function getScalar(type) {
@@ -54,7 +54,6 @@ function toTypes(union) {
  * @param {*} isInputType
  */
 function mapProperty(model, property, modelName, propertyName, isInputType = false) {
-
   // If property is deprecated, ignore it.
   if (property.deprecated) {
     return;
@@ -65,8 +64,8 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
     generated: false,
     meta: {
       required: property.required,
-      hidden: model.definition.settings.hidden && model.definition.settings.hidden.indexOf(propertyName) !== -1
-    }
+      hidden: model.definition.settings.hidden && model.definition.settings.hidden.indexOf(propertyName) !== -1,
+    },
   };
   const currentProperty = types[modelName].meta.fields[propertyName];
 
@@ -92,7 +91,17 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
 
   // If property.type is an array, its a list type.
   if (_.isArray(property.type)) {
+    // console.log(property.type[0].name);
+
     currentProperty.meta.list = true;
+    // TODO: Its not a right way to do it. Need to Come up with a better approach.
+    // TODO: Loopback creates a model with name "Anonymous_" for properties which are of type Object OR Array.
+    // TODO: Theses Anonymous models are not accessable by app.models() method.
+    if (property.type[0].name.indexOf('Anony') !== -1) {
+      currentProperty.meta.type = 'JSON';
+    } else {
+      currentProperty.meta.type = property.type[0].name;
+    }
     propertyType = property.type[0];
   }
 
@@ -113,15 +122,24 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
         name: typeName,
         values: property.enum,
         meta: {
-          category: 'ENUM'
-        }
+          category: 'ENUM',
+        },
       };
       currentProperty.type = typeName;
     }
   }
-
+  if (!scalar && !_.isArray(property.type) && property.defaultFn !== 'now') {
+    // TODO: Its not a right way to do it. Need to Come up with a better approach.
+    // TODO: Loopback creates a model with name "Anonymous_" for properties which are of type Object OR Array.
+    // TODO: Theses Anonymous models are not accessable by app.models() method.
+    if (propertyType.name.indexOf('Anony') === -1) {
+      currentProperty.meta.type = propertyType.modelName;
+    } else {
+      currentProperty.meta.type = 'JSON';
+    }
+  }
   // If this property is another Model
-  if (propertyType.name === 'ModelConstructor' && property.defaultFn !== 'now') {
+  if (!scalar && propertyType.name && propertyType.name.indexOf('Anony') === -1 && property.defaultFn !== 'now') {
     currentProperty.meta.type = (!isInputType) ? propertyType.modelName : `${propertyType.modelName}Input`;
     const union = propertyType.modelName.split('|');
 
@@ -131,9 +149,9 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
         generated: false,
         name: typeName,
         meta: {
-          category: 'UNION'
+          category: 'UNION',
         },
-        values: toTypes(union)
+        values: toTypes(union),
       };
     } else if (propertyType.settings && propertyType.settings.anonymous && propertyType.definition) {
       currentProperty.meta.type = typeName;
@@ -143,8 +161,8 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
         meta: {
           category: 'TYPE',
           input: isInputType,
-          fields: {}
-        }
+          fields: {},
+        },
       }; // creating a new type
       _.forEach(propertyType.definition.properties, (p, key) => {
         mapProperty(propertyType, p, typeName, key, isInputType);
@@ -190,11 +208,11 @@ function mapRelation(rel, modelName, relName) {
       args: Object.assign({
         where: {
           generated: false,
-          type: 'JSON'
+          type: 'JSON',
         },
         order: {
           generated: false,
-          type: 'JSON'
+          type: 'JSON',
         },
       }, connectionArgs),
     },
@@ -204,7 +222,7 @@ function mapRelation(rel, modelName, relName) {
       }
 
       return findRelatedOne(rel, obj, args, context);
-    }
+    },
   };
 }
 
@@ -218,8 +236,8 @@ function mapType(model) {
     name: model.modelName,
     meta: {
       category: 'TYPE',
-      fields: {}
-    }
+      fields: {},
+    },
   };
 
   _.forEach(model.definition.properties, (property, key) => {
@@ -244,8 +262,8 @@ function mapInputType(model) {
     meta: {
       category: 'TYPE',
       input: true,
-      fields: {}
-    }
+      fields: {},
+    },
   };
 
   _.forEach(model.definition.properties, (property, key) => {
@@ -272,7 +290,6 @@ function getCustomTypeDefs() {
  * building all models types & relationships
  */
 function generateTypeDefs(models) {
-
   types = Object.assign({}, types, getCustomTypeDefs());
 
   _.forEach(models, (model) => {
@@ -287,5 +304,5 @@ module.exports = {
   getTypeDef,
   getTypeDefs,
   generateTypeDefs,
-  SCALARS
+  SCALARS,
 };
