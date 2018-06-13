@@ -81,7 +81,7 @@ module.exports = function
         return loopbackPubSub.asyncIterator(model, variables.input);
       },
       (payload, variables, context, info) => {
-        return true;
+        return (variables.input.options.subId === payload.subscriptionId);
         // return (payload.object.data.__data.id.toString() === variables.input.options.id);
 
         // const subscriptionPayload = {
