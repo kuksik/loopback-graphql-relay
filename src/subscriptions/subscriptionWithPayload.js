@@ -80,7 +80,9 @@ module.exports = function
     subscribe: withFilter(
       (payload, variables, context, info) => {
         return loopbackPubSub.asyncIterator(model, variables.input);
-      },
+      }, (payload, variables) => {
+        return true;
+      }
       // (payload, variables, context, info) => {
       //
       //   return true;
