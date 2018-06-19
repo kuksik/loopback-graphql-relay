@@ -63,7 +63,7 @@ module.exports = function (app, schema, opts) {
   websocketServer.listen(WS_PORT, () => {
     console.log(`Apollo Server is now running on http://localhost:${WS_PORT}`);
     // Set up the WebSocket for handling GraphQL subscriptions
-    new SubscriptionServer({
+    new SubscriptionServer({ // eslint-disable-line
       execute,
       subscribe,
       schema,
