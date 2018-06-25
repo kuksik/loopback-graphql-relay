@@ -35,11 +35,8 @@ module.exports = function getRemoteMethodQueries(model) {
           args: acceptingParams,
           type: typeObj.type,
           resolve: (__, args, context, info) => {
-            let params = [];
+            let params = buildParams(method, context, acceptingParams, args);
 
-            _.forEach(acceptingParams, (param, name) => {
-              params.push(args[name]);
-            });
 
             const wrap = promisify(model[method.name]);
 
@@ -62,4 +59,55 @@ module.exports = function getRemoteMethodQueries(model) {
   }
 
   return hooks;
+};
+
+function buildParams(method, ctx, acceptingParams, args) {
+  let params = [];
+
+  _.forEach(acceptingParams, (param, name) => {
+    let val;
+    const a = _.find(method.accepts, (p) =>  p.arg === name);
+    const httpFormat = a && a.http;
+    if (httpFormat) {
+      switch (typeof httpFormat) {
+        case 'function':
+          val = httpFormat(ctx);
+          break;
+        case 'object':
+          switch (httpFormat.source) {
+            case 'body':
+              val = ctx.req.body;
+              break;
+            case 'form':
+            case 'formData':
+              val = ctx.req.body && ctx.req.body[name];
+              break;
+            case 'query':
+              val = ctx.req.query[name];
+              break;
+            case 'path':
+              val = ctx.req.params[name];
+              break;
+            case 'header':
+              val = ctx.req.get(name);
+              break;
+            case 'req':
+              val = ctx.req;
+              break;
+            case 'res':
+              val = ctx.res;
+              break;
+            case 'context':
+              val = ctx;
+              break;
+          }
+          break;
+      }
+    } else {
+      val = args[name];
+    }
+    params.push(val)
+  });
+
+  return params;
 };
